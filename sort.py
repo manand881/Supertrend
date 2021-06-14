@@ -20,6 +20,7 @@ days = 7
 atrlist = [0]*days
 upperband = [0]*days
 lowerband = [0]*days
+supertrend=list()
 
 for key, value in pairs:
     timestampslist.append(key)
@@ -60,16 +61,18 @@ for x in range(0, len(lowerbandbasic)):
         upperbandbasic[x] = 0
 
 for x in range(days, len(lowerband)):
-    if (upperbandbasic[x] < upperband[x-1]):
+    if ((upperbandbasic[x] < upperband[x-1]) or (closelist[x-1] > upperband[x-1])):
         upperband[x] = upperbandbasic[x]
     else:
         upperband[x] = upperband[x-1]
 
-    if (lowerbandbasic[x] > lowerband[x-1]):
+    if ((lowerbandbasic[x] > lowerband[x-1]) or (closelist[x-1] < lowerband[x-1])):
         lowerband[x] = lowerbandbasic[x]
     else:
         lowerband[x] = lowerband[x-1]
 
+for x in range(days, len(lowerband)):
+    pass
 
 fig = go.Figure(data=[go.Candlestick(x=timestampslist,
                                      open=openlist,
