@@ -17,7 +17,9 @@ lowerbandbasic = list()
 truerangelist = list()
 multiplier = 3.3
 days = 7
-atrlist = [None]*days
+atrlist = [0]*days
+upperband = [0]*days
+lowerband = [0]*days
 
 for key, value in pairs:
     timestampslist.append(key)
@@ -41,23 +43,33 @@ for x in timestampslist:
     dummylist.append(float(data["Time Series (5min)"][x]["3. low"]) -
                      float(data["Time Series (5min)"][x]["4. close"]))
     truerangelist.append(max(dummylist))
-
 z = 0
 for x in range(days, len(truerangelist)):
     sum = 0
     for y in range(z, days+z):
         sum += truerangelist[y]
     z += 1
-    atrlist.append(sum)
-
+    atrlist.append(sum*(1/days))
 
 for x in range(0, len(lowerbandbasic)):
     try:
         lowerbandbasic[x] -= multiplier*atrlist[x]
         upperbandbasic[x] += multiplier*atrlist[x]
     except:
-        lowerbandbasic[x] = None
-        upperbandbasic[x] = None
+        lowerbandbasic[x] = 0
+        upperbandbasic[x] = 0
+
+for x in range(days, len(lowerband)):
+    if (upperbandbasic[x] < upperband[x-1]):
+        upperband[x] = upperbandbasic[x]
+    else:
+        upperband[x] = upperband[x-1]
+
+    if (lowerbandbasic[x] > lowerband[x-1]):
+        lowerband[x] = lowerbandbasic[x]
+    else:
+        lowerband[x] = lowerband[x-1]
+
 
 fig = go.Figure(data=[go.Candlestick(x=timestampslist,
                                      open=openlist,
