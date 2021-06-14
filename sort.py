@@ -108,6 +108,10 @@ fig = go.Figure(data=[go.Candlestick(x=timestampslist,
 
 # adding title to graph from json values
 
+# fig.add_trace(go.Scatter(x=supertrend,
+#                     mode='lines',
+#                     name='lines'))
+
 fig.update_layout(
     title=data["Meta Data"]["1. Information"] +
     " for "+data["Meta Data"]["2. Symbol"],
@@ -116,3 +120,4 @@ fig.update_layout(
 # displaying graph in localhost
 
 fig.show()
+print(supertrend)
